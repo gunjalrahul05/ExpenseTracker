@@ -1,3 +1,10 @@
 export default function Register() {
-  return <h1>Register</h1>;
+  return (
+    <>
+      <form action="">
+        <label htmlFor="name"></label>
+        <input type="text" />
+      </form>
+    </>
+  );
 }
