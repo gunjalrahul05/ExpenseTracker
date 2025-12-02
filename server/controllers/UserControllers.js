@@ -29,11 +29,12 @@ exports.userRegistation = async (req, res) => {
 exports.userLogin = async (req, res) => {
   const { email, password } = req.body;
   const user = await UserModel.findOne({ email });
-
+  console.log("Control is here");
+  console.log(email + "  " + password);
   if (!user) {
     return res.json({ message: "Wrong credentials11" });
   }
-  console.log(user);
+  
   const isMatch = await bcrypt.compare(password, user.password);
 
   if (!isMatch) {

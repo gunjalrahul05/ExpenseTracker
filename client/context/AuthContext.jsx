@@ -1,39 +1,50 @@
 import { createContext, useContext, useState, useEffect } from "react";
-
-import * as jwtDecode from "jwt-decode";
+import jwtDecode from "jwt-decode";
 
 const AuthContext = createContext();
 
-export const useAuth = () => useContext(AuthContext); //cannot export the hook directly need to wrap in function
+export const useAuth = () => useContext(AuthContext);
 
 export function AuthProvider({ children }) {
+  console.log("In the authProvider");
   const [token, setToken] = useState(localStorage.getItem("token"));
   const [user, setUser] = useState(() => {
     const u = localStorage.getItem("user");
-
     return u ? JSON.parse(u) : null;
   });
 
   const isAuthenticate = !!token;
-
+  
   useEffect(() => {
-    if (token && !user) {
-      try {
-        const decode = jwtDecode.jwtDecode(token);
-        setUser({ id: decode.id, email: decode.email });
+    if (!token) {
+      setUser(null);
+      localStorage.removeItem("user");
+      return;
+    }
 
-        localStorage.setItem(
-          "user",
-          JSON.stringify({ id: decode.id, email: decode.email })
-        );
-      } catch {
-        setToken(null);
-        localStorage.removeItem("token");
-      }
+    try {
+      const decoded = jwtDecode(token);
+      console.log("Decoded:", decoded);
+
+      const userObj = {
+        id: decoded.id || decoded._id, // FIX for different JWT formats
+        email: decoded.email,
+      };
+      console.log(`user object = ${userObj}`);
+
+      setUser(userObj);
+      localStorage.setItem("user", JSON.stringify(userObj));
+    } catch (err) {
+      console.error("JWT decode failed:", err);
+      setToken(null);
+      setUser(null);
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
     }
   }, [token]);
 
   const login = (userData, jwtToken) => {
+    console.log("Login done");
     setUser(userData);
     setToken(jwtToken);
 
@@ -44,9 +55,8 @@ export function AuthProvider({ children }) {
   const logout = () => {
     setUser(null);
     setToken(null);
-
     localStorage.removeItem("user");
-    localStorage.removeItem("user");
+    localStorage.removeItem("token");
   };
 
   return (

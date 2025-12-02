@@ -40,3 +40,28 @@
 .read-the-docs {
   color: #888;
 }
+
+#infobox {
+  height: 140px;
+  width: 300px;
+  background-color: bisque;
+  border: 2px solid black;
+  border-radius: 25px;
+}
+
+#expenseForm {
+  background-color: aliceblue;
+  height: 800px;
+  width: 400px;
+  border: 2px solid black;
+  border-radius: 20px;
+}
+#expenseForm input {
+  display: block;
+  margin: 0 auto;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+#expenseForm button {
+  background-color: cadetblue;
+}

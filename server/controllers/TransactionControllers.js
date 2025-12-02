@@ -18,9 +18,19 @@ exports.AddTransaction = async (req, res) => {
 
     console.log("Insertion SuccessFul");
 
-    return res.status(403).json({ transaction, message: "Data Added Success" });
+    console.log("Insertion Successful");
+
+    return res.status(201).json({
+      success: true,
+      transaction,
+      message: "Data Added Successfully",
+    });
   } catch (error) {
-    return res.status(201).json({ error, message: "Error Occured" });
+    return res.status(500).json({
+      success: false,
+      message: "Error Occurred",
+      error: error.message,
+    });
   }
 };
 

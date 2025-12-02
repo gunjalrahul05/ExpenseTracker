@@ -1,9 +1,11 @@
 import { useState } from "react";
 import api from "../../api/axios";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 export default function Login() {
+  const { login } = useAuth();
   const navigate = useNavigate();
-  const [user, setUser] = useState({ user: "", password: "" });
+  const [user, setUser] = useState({ email: "", password: "" });
 
   const handleOnChange = (e) => {
     setUser({
@@ -17,8 +19,10 @@ export default function Login() {
 
     try {
       const res = await api.post("/login", user); // POST not GET
-      console.log(res);
-      if (res.status === 200 || res.data.success) {
+
+      if (res.status === 201 || res.data.success) {
+        login(res.data.user, res.data.token);
+        alert("Login Done");
         navigate("/");
       }
     } catch (error) {
@@ -40,7 +44,7 @@ export default function Login() {
             aria-label="Username"
             aria-describedby="addon-wrapping"
             onChange={handleOnChange}
-            name="name"
+            name="email"
           />
         </div>
 

@@ -22,7 +22,6 @@ export default function Register() {
 
   const handOnSubmit = async (e) => {
     e.preventDefault();
-    console.log(user);
     try {
       const res = await api.post("/registration", user);
       setError("");
